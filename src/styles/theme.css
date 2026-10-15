@@ -1,0 +1,277 @@
+/*
+ * My Academic — theme
+ *
+ * Contains the two still-referenced tokens, tiny utilities, SweetAlert
+ * theming, and print rules. Everything else lives in src/styles/muiTheme.js.
+ *
+ * UI-polish round 2:
+ *   - Added a global reset (margin/padding/box-sizing) — fixes the browser's
+ *     default 8px body margin that was insetting the whole app shell.
+ *   - Raised SweetAlert's z-index above MUI's Drawer (1200) and AppBar (1100)
+ *     so its backdrop dims the whole app, including the sidebar and topbar.
+ *   - Redesigned the toast: more padding, better icon sizing, elevated shadow.
+ */
+
+/* ------------------------------------------------------------------ *
+ * 1. Global reset
+ * ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f9f9ff;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------------------------ *
+ * 2. Utilities
+ * ------------------------------------------------------------------ */
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------ *
+ * 3. SweetAlert2 — global
+ * ------------------------------------------------------------------ */
+.swal2-container {
+  z-index: 2000 !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * 4. SweetAlert2 — Toasts
+ * ------------------------------------------------------------------ */
+.swal-toast-popup {
+  padding: 14px 18px !important;
+  min-width: 280px;
+  min-height: 54px;
+  border-radius: 12px !important;
+  background-color: #1c2433 !important;
+  box-shadow:
+    0 12px 32px rgba(17, 28, 45, 0.32),
+    0 4px 8px rgba(17, 28, 45, 0.2) !important;
+  font-family: var(--font-sans) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.swal-toast-popup .swal2-icon {
+  width: 24px !important;
+  height: 24px !important;
+  margin: 0 !important;
+  border-width: 2px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.swal-toast-popup .swal2-icon .swal2-icon-content {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+.swal-toast-title {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.45 !important;
+  text-align: left !important;
+}
+
+.swal-toast-popup .swal2-timer-progress-bar {
+  background: rgba(255, 255, 255, 0.3) !important;
+  height: 3px !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * 5. SweetAlert2 — Confirmation dialogs
+ * ------------------------------------------------------------------ */
+.swal-confirm-popup {
+  padding: 24px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 48px rgba(17, 28, 45, 0.24) !important;
+  font-family: var(--font-sans) !important;
+  background-color: #ffffff !important;
+}
+
+.swal-confirm-title {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #111c2d !important;
+  letter-spacing: -0.02em !important;
+  padding: 0 0 8px !important;
+  margin: 0 !important;
+}
+
+.swal-confirm-text {
+  font-size: 14px !important;
+  color: #5b3f43 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
+}
+
+.swal-confirm-popup .swal2-icon {
+  margin: 4px auto 16px !important;
+}
+
+.swal-confirm-popup .swal2-actions {
+  gap: 8px !important;
+  margin-top: 20px !important;
+  width: 100%;
+  justify-content: flex-end !important;
+}
+
+.swal-confirm-button,
+.swal-cancel-button {
+  height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 8px !important;
+  font-family: var(--font-sans) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  min-width: 100px;
+}
+
+.swal-confirm-button {
+  background-color: #b80049 !important;
+  color: #ffffff !important;
+}
+
+.swal-confirm-button:hover,
+.swal-confirm-button:focus {
+  background-color: #e2165f !important;
+}
+
+.swal-cancel-button {
+  background-color: #dee8ff !important;
+  color: #b80049 !important;
+}
+
+.swal-cancel-button:hover,
+.swal-cancel-button:focus {
+  background-color: #d0dcf8 !important;
+}
+
+.swal2-confirm:focus,
+.swal2-cancel:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * 6. Print rules
+ * ------------------------------------------------------------------ */
+@media print {
+  body.printing-table * {
+    visibility: hidden !important;
+  }
+
+  body.printing-table .print-area,
+  body.printing-table .print-area * {
+    visibility: visible !important;
+  }
+
+  body.printing-table .print-area {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: auto !important;
+    z-index: 9999 !important;
+  }
+
+  body.printing-modal * {
+    visibility: hidden !important;
+  }
+
+  body.printing-modal .print-modal-root,
+  body.printing-modal .print-modal-root * {
+    visibility: visible !important;
+  }
+
+  body.printing-modal .print-modal-root {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: #ffffff !important;
+    z-index: 9999 !important;
+  }
+
+  body.printing-modal .print-modal-root .MuiBackdrop-root {
+    display: none !important;
+  }
+
+  body.printing-modal .print-modal-root .MuiDialog-container {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 20px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body.printing-modal .print-modal-root .MuiDialog-paper {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  body:not(.printing-table):not(.printing-modal) .MuiDrawer-root,
+  body:not(.printing-table):not(.printing-modal) .MuiAppBar-root {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+  }
+}

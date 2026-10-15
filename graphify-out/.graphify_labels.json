@@ -1,0 +1,18 @@
+{
+  "0": "Future Development Next Steps",
+  "1": "Icon",
+  "2": "render(keep) Root Render Loop",
+  "3": "State Management Three-Context Nesting",
+  "4": "Fixed Reference Data Lists",
+  "5": "Route Table",
+  "6": "package.json",
+  "7": "referenceData.js",
+  "8": "AppRoutes.jsx",
+  "9": "grading.js",
+  "10": "validation.js",
+  "11": "Core Principles Priority Order",
+  "12": "Utilities (grading, pagination, validation, transcript)",
+  "13": "Design Tokens in theme.css",
+  "14": "Grading Rules (two separate scales)",
+  "15": "Frontend Work Needed at Integration"
+}

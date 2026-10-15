@@ -1,0 +1,12 @@
+- generic [ref=f4e6]:
+  - heading "MyAcademic" [level=1] [ref=f4e7]
+  - paragraph [ref=f4e8]: Sistem Informasi Akademik
+  - generic [ref=f4e9]: Username / Email
+  - textbox "Username / Email" [ref=f4e10]: admin@sman1harapan.sch.id
+  - generic [ref=f4e11]:
+    - generic [ref=f4e12]: Password
+    - generic [ref=f4e13]:
+      - textbox "Password" [ref=f4e14]: demo1234
+      - button "Show password" [ref=f4e15] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f4e16]: visibility
+  - button "Login" [ref=f4e17] [cursor=pointer]
