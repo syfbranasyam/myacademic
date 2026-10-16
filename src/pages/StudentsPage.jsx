@@ -27,7 +27,17 @@ import {
 import { CrudTabs, BulkActionBar, SortableTableHead } from '../components/crud'
 import StudentFormModal from '../components/students/StudentFormModal.jsx'
 import StudentViewModal from '../components/students/StudentViewModal.jsx'
-import { CLASSES, activeStatusLabel, activeStatusVariant } from '../data/referenceData.js'
+import { activeStatusLabel, activeStatusVariant } from '../data/referenceData.js'
+
+/*
+ * Students page.
+ *
+ * Integration pass: the Class filter reads from `availableClasses` (the
+ * Class Management register) instead of the legacy CLASSES constant, so
+ * creating, renaming, or deleting a class is reflected here automatically.
+ * The "Class" placeholder that acts as the "all classes" sentinel is
+ * preserved.
+ */
 
 const COLUMNS = {
   nis: { label: 'NIS', sortable: true, align: 'left' },
@@ -54,6 +64,7 @@ export default function StudentsPage() {
     deleteStudent,
     bulkSetStudentStatus,
     bulkDeleteStudents,
+    availableClasses,
   } = useData()
   const { showToast, showConfirmation } = useToast()
 
@@ -346,7 +357,7 @@ export default function StudentsPage() {
             label: 'Class',
             value: clsFilter,
             onChange: setClsFilter,
-            options: ['Class', ...CLASSES],
+            options: ['Class', ...availableClasses.map((c) => c.cls)],
           },
         ]}
       />

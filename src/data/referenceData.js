@@ -15,7 +15,7 @@ export const USERS = [
   {
     username: 'admin',
     password: 'admin123',
-    name: 'Sarah Jenkins, M.Pd',
+    name: 'Syifa Fibriana Syam',
     role: ROLES.ADMIN,
     email: 'admin@sman1harapan.sch.id',
     phone: '+62 812-3456-7890',

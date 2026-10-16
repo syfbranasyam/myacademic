@@ -9,25 +9,23 @@ import { useData } from '../../context/DataContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { useCrudConfirm } from '../../hooks/useCrudConfirm.js'
 import {
-  CLASSES,
-  SUBJECTS,
   TEACHERS,
-  ACADEMIC_YEARS,
-  SEMESTERS,
   CURRENT_YEAR,
   CURRENT_SEMESTER,
 } from '../../data/referenceData.js'
 
 /*
- * Teaching Assignment Create / Edit modal (spec §10.6, revision Phase 5e).
+ * Teaching Assignment Create / Edit modal.
  *
- * The revision doc adds a Status field (IsActive: 1 | 0) and a save
- * confirmation on both Add and Edit. The optional `onCreated(payload)` still
- * fires after Create so the parent page can jump its filters to the new
- * record's period.
+ * Integration pass: Class, Subject, Academic Year, and Semester selects now
+ * read from the derived option sets on DataContext, so any Create / Update /
+ * Delete in Class Management, Academic Master, or Academic Period Management
+ * is reflected here automatically. Teacher options remain static because no
+ * Teacher CRUD module exists.
  *
- * `onSaved()` fires after a successful save (both add and edit) so the page
- * can refresh the tab counts.
+ * `onCreated(payload)` still fires after Create so the parent page can jump
+ * its filters to the new record's period. `onSaved()` fires after a
+ * successful save (both add and edit).
  */
 export default function AssignmentFormModal({
   assignment,
@@ -35,7 +33,14 @@ export default function AssignmentFormModal({
   onCreated,
   onSaved,
 }) {
-  const { addAssignment, updateAssignment } = useData()
+  const {
+    addAssignment,
+    updateAssignment,
+    availableClasses,
+    availableSubjects,
+    availableYears,
+    availableSemesters,
+  } = useData()
   const { showToast } = useToast()
   const { confirmSave } = useCrudConfirm()
   const isEdit = Boolean(assignment)
@@ -130,9 +135,9 @@ export default function AssignmentFormModal({
           fullWidth
         >
           <MenuItem value="Select Class">Select Class</MenuItem>
-          {CLASSES.map((c) => (
-            <MenuItem key={c} value={c}>
-              {c}
+          {availableClasses.map((c) => (
+            <MenuItem key={c.id} value={c.cls}>
+              {c.cls}
             </MenuItem>
           ))}
         </TextField>
@@ -147,9 +152,9 @@ export default function AssignmentFormModal({
           fullWidth
         >
           <MenuItem value="Select Subject">Select Subject</MenuItem>
-          {SUBJECTS.map((s) => (
-            <MenuItem key={s} value={s}>
-              {s}
+          {availableSubjects.map((s) => (
+            <MenuItem key={s.code} value={s.name}>
+              {s.name}
             </MenuItem>
           ))}
         </TextField>
@@ -164,7 +169,7 @@ export default function AssignmentFormModal({
             onChange={(e) => setYear(e.target.value)}
             fullWidth
           >
-            {ACADEMIC_YEARS.map((y) => (
+            {availableYears.map((y) => (
               <MenuItem key={y} value={y}>
                 {y}
               </MenuItem>
@@ -180,7 +185,7 @@ export default function AssignmentFormModal({
             onChange={(e) => setSemester(e.target.value)}
             fullWidth
           >
-            {SEMESTERS.map((s) => (
+            {availableSemesters.map((s) => (
               <MenuItem key={s} value={s}>
                 {s}
               </MenuItem>

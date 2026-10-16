@@ -24,17 +24,26 @@ import GenerateGradeModal from '../components/grades/GenerateGradeModal.jsx'
 import GradeEditModal from '../components/grades/GradeEditModal.jsx'
 import RosterViewModal from '../components/grades/RosterViewModal.jsx'
 import {
-  CLASSES,
   GRADE_STATUSES,
-  SUBJECTS,
-  ACADEMIC_YEARS,
-  SEMESTERS,
   CLASS_FACTS,
   teacherNip,
   subjectIcon,
   activeStatusLabel,
   activeStatusVariant,
 } from '../data/referenceData.js'
+
+/*
+ * Grade Management page.
+ *
+ * Integration pass: the Year, Semester, Class, and Subject filters read from
+ * the derived option sets on DataContext, so Create / Update / Delete in
+ * Academic Period Management, Class Management, and Academic Master is
+ * reflected here automatically.
+ *
+ * The default filter values ('2026/2027', 'Ganjil (Odd)') remain the same
+ * literals as before — they identify the current year and semester, not a
+ * hardcoded list of options.
+ */
 
 const COLUMNS = {
   cls: { label: 'Class', sortable: true, align: 'left' },
@@ -62,6 +71,10 @@ export default function GradeManagementPage() {
     deleteRoster,
     bulkSetRosterStatus,
     bulkDeleteRosters,
+    availableClasses,
+    availableSubjects,
+    availableYears,
+    availableSemesters,
   } = useData()
   const { showToast, showConfirmation } = useToast()
   const { currentUser, isAdmin } = useAuth()
@@ -69,7 +82,7 @@ export default function GradeManagementPage() {
   const [activeTab, setActiveTab] = useState('Active')
   const [search, setSearch] = useState('')
   const [yearFilter, setYearFilter] = useState('2026/2027')
-  const [semesterFilter, setSemesterFilter] = useState(SEMESTERS[0])
+  const [semesterFilter, setSemesterFilter] = useState('Ganjil (Odd)')
   const [clsFilter, setClsFilter] = useState('All Classes')
   const [subjectFilter, setSubjectFilter] = useState('All Subjects')
   const [selected, setSelected] = useState(() => new Set())
@@ -189,7 +202,7 @@ export default function GradeManagementPage() {
 
   const handleGenerated = () => {
     setYearFilter('2026/2027')
-    setSemesterFilter(SEMESTERS[0])
+    setSemesterFilter('Ganjil (Odd)')
   }
 
   const handleRefresh = () => {
@@ -434,10 +447,34 @@ export default function GradeManagementPage() {
         searchPlaceholder="Search class, subject or teacher..."
         onRefresh={handleRefresh}
         filters={[
-          { key: 'year', label: 'Year', value: yearFilter, onChange: setYearFilter, options: ACADEMIC_YEARS },
-          { key: 'sem', label: 'Semester', value: semesterFilter, onChange: setSemesterFilter, options: SEMESTERS },
-          { key: 'cls', label: 'Class', value: clsFilter, onChange: setClsFilter, options: ['All Classes', ...CLASSES] },
-          { key: 'sub', label: 'Subject', value: subjectFilter, onChange: setSubjectFilter, options: ['All Subjects', ...SUBJECTS] },
+          {
+            key: 'year',
+            label: 'Year',
+            value: yearFilter,
+            onChange: setYearFilter,
+            options: availableYears,
+          },
+          {
+            key: 'sem',
+            label: 'Semester',
+            value: semesterFilter,
+            onChange: setSemesterFilter,
+            options: availableSemesters,
+          },
+          {
+            key: 'cls',
+            label: 'Class',
+            value: clsFilter,
+            onChange: setClsFilter,
+            options: ['All Classes', ...availableClasses.map((c) => c.cls)],
+          },
+          {
+            key: 'sub',
+            label: 'Subject',
+            value: subjectFilter,
+            onChange: setSubjectFilter,
+            options: ['All Subjects', ...availableSubjects.map((s) => s.name)],
+          },
         ]}
       />
 

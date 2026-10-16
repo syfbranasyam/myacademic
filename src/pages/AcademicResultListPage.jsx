@@ -29,7 +29,6 @@ import { SortableTableHead } from '../components/crud'
 import ResultKpiCards from '../components/result/ResultKpiCards.jsx'
 import ResultViewModal from '../components/result/ResultViewModal.jsx'
 
-import { CLASSES, ACADEMIC_YEARS, SEMESTERS } from '../data/referenceData.js'
 import {
   letterGrade,
   gradeVariant,
@@ -38,13 +37,20 @@ import {
 } from '../utils/grading.js'
 
 /*
- * Academic Result (UI-polish spec §5).
+ * Academic Result (UI-polish spec §5; integration pass).
  *
  *   - No breadcrumb.
  *   - No Active/Inactive tabs — this page has no status concept.
  *   - Row-level Print opens the transcript modal and auto-prints it.
  *   - Export Transcripts prints the grid (KPIs + table), not the whole page.
  *   - Page size 10/50/100.
+ *
+ * Integration pass: Year, Semester, and Class filters read from the derived
+ * option sets on DataContext. The Class filter previously offered the legacy
+ * 'XI IPA 1' / 'XI IPA 2' / 'XI IPS 1' constants which did not match the class
+ * register; it now lists the actual Class Management records. Year and
+ * Semester mirror Academic Period Management. Status options remain
+ * behavioural literals derived from utils/grading.js.
  */
 
 const COLUMNS = {
@@ -79,13 +85,19 @@ function printArea(mode, onDone) {
 }
 
 export default function AcademicResultListPage() {
-  const { students, rosters } = useData()
+  const {
+    students,
+    rosters,
+    availableClasses,
+    availableYears,
+    availableSemesters,
+  } = useData()
   const { showToast } = useToast()
   const { currentUser, isAdmin } = useAuth()
 
   const [search, setSearch] = useState('')
   const [yearFilter, setYearFilter] = useState('2026/2027')
-  const [semesterFilter, setSemesterFilter] = useState(SEMESTERS[0])
+  const [semesterFilter, setSemesterFilter] = useState('Ganjil (Odd)')
   const [clsFilter, setClsFilter] = useState('All Classes')
   const [statusFilter, setStatusFilter] = useState('All Status')
   const [page, setPage] = useState(1)
@@ -271,10 +283,34 @@ export default function AcademicResultListPage() {
         searchPlaceholder="Search student by name or NIS..."
         onRefresh={handleRefresh}
         filters={[
-          { key: 'year', label: 'Year', value: yearFilter, onChange: setYearFilter, options: ACADEMIC_YEARS },
-          { key: 'sem', label: 'Semester', value: semesterFilter, onChange: setSemesterFilter, options: SEMESTERS },
-          { key: 'cls', label: 'Class', value: clsFilter, onChange: setClsFilter, options: ['All Classes', ...CLASSES] },
-          { key: 'status', label: 'Status', value: statusFilter, onChange: setStatusFilter, options: ['All Status', 'Lulus / Pass', 'Remedial Needed'] },
+          {
+            key: 'year',
+            label: 'Year',
+            value: yearFilter,
+            onChange: setYearFilter,
+            options: availableYears,
+          },
+          {
+            key: 'sem',
+            label: 'Semester',
+            value: semesterFilter,
+            onChange: setSemesterFilter,
+            options: availableSemesters,
+          },
+          {
+            key: 'cls',
+            label: 'Class',
+            value: clsFilter,
+            onChange: setClsFilter,
+            options: ['All Classes', ...availableClasses.map((c) => c.cls)],
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            value: statusFilter,
+            onChange: setStatusFilter,
+            options: ['All Status', 'Lulus / Pass', 'Remedial Needed'],
+          },
         ]}
       />
 

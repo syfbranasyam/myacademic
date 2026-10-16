@@ -29,16 +29,23 @@ import { CrudTabs, BulkActionBar, SortableTableHead } from '../components/crud'
 import AssignmentFormModal from '../components/teaching/AssignmentFormModal.jsx'
 import AssignmentViewModal from '../components/teaching/AssignmentViewModal.jsx'
 import {
-  CLASSES,
   TEACHERS,
-  ACADEMIC_YEARS,
-  SEMESTER_OPTIONS,
   teacherNip,
   subjectIcon,
   shortSemester,
   activeStatusLabel,
   activeStatusVariant,
 } from '../data/referenceData.js'
+
+/*
+ * Teaching Assignment page.
+ *
+ * Integration pass: the Academic Year, Semester, and Class filters read from
+ * the derived option sets on DataContext — which mirror the records in
+ * Academic Period Management and Class Management — instead of the legacy
+ * static constants. The "All Semesters" / "All Classes" / "All Teachers"
+ * sentinels are preserved.
+ */
 
 const COLUMNS = {
   teacher: { label: 'Teacher', sortable: true, align: 'left' },
@@ -65,6 +72,9 @@ export default function TeachingAssignmentPage() {
     deleteAssignment,
     bulkSetAssignmentStatus,
     bulkDeleteAssignments,
+    availableClasses,
+    availableYears,
+    availableSemesters,
   } = useData()
   const { showToast, showConfirmation } = useToast()
   const { currentUser, isAdmin } = useAuth()
@@ -370,21 +380,21 @@ export default function TeachingAssignmentPage() {
             label: 'Academic Year',
             value: yearFilter,
             onChange: setYearFilter,
-            options: ACADEMIC_YEARS,
+            options: availableYears,
           },
           {
             key: 'sem',
             label: 'Semester',
             value: semesterFilter,
             onChange: setSemesterFilter,
-            options: SEMESTER_OPTIONS,
+            options: [...availableSemesters, 'All Semesters'],
           },
           {
             key: 'cls',
             label: 'Class',
             value: clsFilter,
             onChange: setClsFilter,
-            options: ['All Classes', ...CLASSES],
+            options: ['All Classes', ...availableClasses.map((c) => c.cls)],
           },
           ...(isAdmin
             ? [

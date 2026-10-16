@@ -8,16 +8,18 @@ import Modal from '../ui/Modal.jsx'
 import { useData } from '../../context/DataContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { useCrudConfirm } from '../../hooks/useCrudConfirm.js'
-import { CLASSES, GENDERS } from '../../data/referenceData.js'
+import { GENDERS } from '../../data/referenceData.js'
 
 /*
- * Student Add / Edit modal (spec §10.6, revision Phase 5).
+ * Student Add / Edit modal.
  *
- * The status field now stores `IsActive: 1 | 0` instead of a display string.
- * Both Add and Edit confirm the save with SweetAlert before committing.
+ * Integration pass: the Class Cohort select now reads from `availableClasses`
+ * (the Class Management register) instead of the legacy CLASSES constant, so
+ * newly added classes appear here automatically and deleted classes disappear.
  *
- * `onSaved()` is called after a successful save so the parent can refresh
- * (reset selection, keep the current tab, etc.).
+ * The status field stores `IsActive: 1 | 0`. Both Add and Edit confirm the
+ * save with SweetAlert before committing. `onSaved()` fires after a
+ * successful save so the parent can refresh.
  */
 
 const READ_ONLY_SX = {
@@ -34,7 +36,7 @@ const READ_ONLY_SX = {
 }
 
 export default function StudentFormModal({ student, onClose, onSaved }) {
-  const { addStudent, updateStudent, nextNis } = useData()
+  const { addStudent, updateStudent, nextNis, availableClasses } = useData()
   const { showToast } = useToast()
   const { confirmSave } = useCrudConfirm()
   const isEdit = Boolean(student)
@@ -131,9 +133,9 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
             fullWidth
           >
             <MenuItem value="Select class">Select class</MenuItem>
-            {CLASSES.map((c) => (
-              <MenuItem key={c} value={c}>
-                {c}
+            {availableClasses.map((c) => (
+              <MenuItem key={c.id} value={c.cls}>
+                {c.cls}
               </MenuItem>
             ))}
           </TextField>

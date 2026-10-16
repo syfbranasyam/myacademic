@@ -7,7 +7,7 @@ import Modal from '../ui/Modal.jsx'
 import { useData } from '../../context/DataContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { useCrudConfirm } from '../../hooks/useCrudConfirm.js'
-import { CLASSES, SUBJECTS, TEACHERS } from '../../data/referenceData.js'
+import { TEACHERS } from '../../data/referenceData.js'
 
 /*
  * Generate Grade roster modal (spec §10.6, revision Phase 6).
@@ -17,11 +17,16 @@ import { CLASSES, SUBJECTS, TEACHERS } from '../../data/referenceData.js'
  * refusal is a toast, not a SweetAlert. On success, the page filter jumps to
  * the new roster's year + semester so it is visible.
  *
+ * Integration pass: the Class and Subject selects read from the derived option
+ * sets on DataContext, so Create / Update / Delete in Class Management and
+ * Academic Master is reflected here automatically. Teacher options remain
+ * static because no Teacher CRUD module exists.
+ *
  * `onCreated()` is called after a successful generate so the parent can react
  * (jump filters, refresh tab counts).
  */
 export default function GenerateGradeModal({ onClose, onCreated }) {
-  const { generateRoster } = useData()
+  const { generateRoster, availableClasses, availableSubjects } = useData()
   const { showToast } = useToast()
   const { confirmSave } = useCrudConfirm()
 
@@ -99,9 +104,9 @@ export default function GenerateGradeModal({ onClose, onCreated }) {
           fullWidth
         >
           <MenuItem value="Select subject">Select subject</MenuItem>
-          {SUBJECTS.map((s) => (
-            <MenuItem key={s} value={s}>
-              {s}
+          {availableSubjects.map((s) => (
+            <MenuItem key={s.code} value={s.name}>
+              {s.name}
             </MenuItem>
           ))}
         </TextField>
@@ -116,9 +121,9 @@ export default function GenerateGradeModal({ onClose, onCreated }) {
           fullWidth
         >
           <MenuItem value="Select class">Select class</MenuItem>
-          {CLASSES.map((c) => (
-            <MenuItem key={c} value={c}>
-              {c}
+          {availableClasses.map((c) => (
+            <MenuItem key={c.id} value={c.cls}>
+              {c.cls}
             </MenuItem>
           ))}
         </TextField>

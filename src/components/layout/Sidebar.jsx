@@ -49,6 +49,18 @@ const NAV = [
     roles: [ROLES.ADMIN],
   },
   {
+    label: 'Class Management',
+    icon: 'class',
+    route: '/classes',
+    roles: [ROLES.ADMIN],
+  },
+  {
+    label: 'Academic Period',
+    icon: 'date_range',
+    route: '/academic-periods',
+    roles: [ROLES.ADMIN],
+  },
+  {
     label: 'Teaching Assignment',
     icon: 'co_present',
     route: '/teaching-assignment',
@@ -59,6 +71,12 @@ const NAV = [
     icon: 'assignment_turned_in',
     route: '/grade-management',
     roles: [ROLES.ADMIN, ROLES.TEACHER],
+  },
+  {
+    label: 'Grade Scale',
+    icon: 'grade',
+    route: '/grade-scale',
+    roles: [ROLES.ADMIN],
   },
   {
     label: 'Academic Result',
